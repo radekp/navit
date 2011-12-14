@@ -94,6 +94,14 @@ void RenderArea::closeEvent(QCloseEvent* event)
 	this->processClose();
 }
 
+void RenderArea::showOnFullScreen()
+{
+    // Show in full screen
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    setWindowState(Qt::WindowFullScreen);
+    raise();
+}
+
 bool RenderArea::event(QEvent *event)
 {
 #if QT_VERSION >= 0x040700                                                 
@@ -102,6 +110,20 @@ bool RenderArea::event(QEvent *event)
 		return true;
 	}
 #endif
+
+    // Needed for QtMoko fullscreen
+    if(event->type() == QEvent::WindowDeactivate)
+    {
+        lower();
+    }
+    else if(event->type() == QEvent::WindowActivate)
+    {
+        QString title = windowTitle();
+        setWindowTitle(QLatin1String("_allow_on_top_"));
+        raise();
+        setWindowTitle(title);
+    }
+
 	return QWidget::event(event);
 }
 //##############################################################################################################
