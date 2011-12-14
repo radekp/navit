@@ -675,10 +675,10 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 		if (xid.length()>0) {
 			_outerWidget->embedInto(xid.toULong(&ok,0));
 		}
-		_outerWidget->show();
+		_outerWidget->showMaximized();
 #endif /* QT_QPAINTER_USE_EMBEDDING */
 		if (this_->w && this_->h)
-			this_->widget->show();
+			this_->widget->showMaximized();
 		else
 			this_->widget->showMaximized();
 #endif /* QT_QPAINTER_NO_WIDGET */
@@ -970,7 +970,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #ifdef HAVE_QPE
 	ret->app = new QPEApplication(argc, argv);
 #else
-	ret->app = new QApplication(argc, argv);
+	ret->app = new QtopiaApplication(argc, argv);
 #endif
 #endif
 	ret->widget= new RenderArea(ret);

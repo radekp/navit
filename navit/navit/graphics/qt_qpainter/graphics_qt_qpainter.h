@@ -66,6 +66,7 @@
 #else
 #include <QResizeEvent>
 #include <QApplication>
+#include <QtopiaApplication>
 #if QT_VERSION >= 0x040200
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -99,8 +100,10 @@
 #endif
 
 #ifndef QT_QPAINTER_RENDERAREA_PARENT
-#define QT_QPAINTER_RENDERAREA_PARENT QWidget
+#define QT_QPAINTER_RENDERAREA_PARENT QMainWindow
 #endif
+
+#define QT_QPAINTER_USE_EVENT_QT 1
 
 class RenderArea;
 
@@ -124,7 +127,7 @@ struct graphics_priv {
 #ifdef HAVE_QPE
 	QPEApplication *app;
 #else
-	QApplication *app;
+	QtopiaApplication *app;
 #endif
 	RenderArea *widget;
 	QPainter *painter;
