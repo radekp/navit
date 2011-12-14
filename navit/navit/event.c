@@ -106,7 +106,7 @@ event_request_system(const char *system, const char *requestor)
 	if (e_system) {
 		if (strcmp(e_system, system)) {
 			dbg(0,"system '%s' already requested by '%s', can't set to '%s' as requested from '%s'\n", e_system, e_requestor, system, requestor);
-			return 0;
+			return 1;
 		}
 		return 1;
 	}
