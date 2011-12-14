@@ -630,7 +630,7 @@ fullscreen(struct window *win, int on)
 	_outerWidget=this_->widget;
 #endif /* QT_QPAINTER_USE_EMBEDDING */
 	if (on)
-		_outerWidget->showFullScreen();
+        this_->widget->showOnFullScreen();
 	else
 		_outerWidget->showMaximized();
 #endif

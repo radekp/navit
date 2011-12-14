@@ -46,6 +46,7 @@ class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
 #endif
 
      void processClose();
+     void showOnFullScreen();
 protected:
      int is_overlay;
      QSize sizeHint() const;
