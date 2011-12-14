@@ -48,7 +48,7 @@ void EmbeddedWidget::closeEvent(QCloseEvent* event)
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT *parent, int w, int h, int overlay)
-	: QT_QPAINTER_RENDERAREA_PARENT(parent)
+	: QT_QPAINTER_RENDERAREA_PARENT(parent, 0)
 {
 	pixmap = new QPixmap(w, h);
 #ifndef QT_QPAINTER_NO_WIDGET
