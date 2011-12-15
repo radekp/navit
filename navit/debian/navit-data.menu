@@ -1,0 +1,2 @@
+?package(navit,navit-data):needs="X11" section="Applications/Science/Geoscience"\
+  title="navit" command="/usr/bin/navit" icon="/usr/share/pixmaps/navit.xpm"

@@ -1,0 +1,106 @@
+This file is used to keep track of packaging choices, known issues and TO-DOs.
+
+==================================================
+1- HOW THE SOURCE PACKAGE IS HANDLED USING SVN/GIT
+==================================================
+
+The work on this package takes place on the alioth git repository.
+It requires an alioth account with grant to the collab-maint group.
+
+Cloning the repository:
+
+ $ git clone <my-alioth-login>@alioth.debian.org:/git/collab-maint/navit.git
+
+The repository has 3 remote branches:
+* origin/upstream-svn
+* origin/upstream
+* origin/master
+
+HEAD is binded to master. 
+master fetched localy by the clone:
+
+ $ git branch
+ * master
+
+A daily cronjob managed by bzed syncs origin/upstream-svn with upstream's SVN
+repository (<https://navit.svn.sourceforge.net/svnroot/navit/trunk/navit>).
+
+A packaging cycle starts by merging origin/upstream-svn with upstream. It
+requires having checked out origin/upstream localy (need to be done once):
+
+ $ git checkout -b upstream origin/upstream
+
+Then we can do the merge:
+
+ $ git merge origin/upstream-svn
+
+It can leads to conflicts since some parts of pristine upstream tree have
+been removed in our upstream branch. These removed parts are listed below:
+
+* android stuff:
+  navit/android*
+  contrib
+
+* iphone stuff:
+  navit/iphone
+  navit/vehicle/iphone
+  navit/graphics/cocoa
+
+* windows stuff
+  navit/support/win32
+  navit/gui/win32
+  navit/graphics/win32
+
+* useless embedded stuff
+  navit/fonts
+  navit/intl_cmake
+  navit/map/poi_geodownload/libmdb
+  navit/support/espeak
+  navit/support/ezxml
+  navit/support/glib
+  navit/support/libc
+  navit/support/libpng
+  navit/support/wordexp
+  navit/support/xgetopt
+  navit/support/zlib
+
+* other unused tools and scripts without copyright statement
+  navit/tools
+  navit/script
+
+When the merge is completed and committed we then switch to the master branch
+to merge upstream:
+
+  $ git checkout master
+  $ git merge upstream
+
+Then we can work on the packaging, still in the master branch.
+
+See below how to patch upstream source code.
+
+The package is built using git-buildpackage. See
+<http://honk.sigxcpu.org/projects/git-buildpackage/manual-html/gbp.html>
+
+To build using cowbuilder consider using Russ Allberry's git-pbuilder
+<http://www.eyrie.org/~eagle/software/scripts/git-pbuilder.html>:
+
+$ DIST=sid git-buildpackage --git-builder=/usr/bin/git-pbuilder
+
+Warning: when modifying upstream branch (such as removing parts) you'll need
+to rm .orig.tar.gz before building the package again.
+
+========
+2- TO-DO
+========
+
+* Have gypsy packaged into debian?
+
+* Solve missing copyright statement issues
+
+* -Dgraphics/gd=FALSE: currently broken
+* -Dgraphics/sdl=FALSE: seems functional since release 0.2.0, but keeping
+  disabled for now until I'm sure it's mature enough
+* -Dgraphics/opengl=FALSE: idem sdl
+* -Dgui/qml=FALSE: idem sdl 
+
+* Tons of gcc warnings

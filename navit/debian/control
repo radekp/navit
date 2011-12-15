@@ -1,0 +1,39 @@
+Source: qtmoko-navit
+Section: misc
+Priority: extra
+Maintainer: Gilles Filippini <pini@debian.org>
+Build-Depends: debhelper (>= 7.0.50~),
+ libdevil-dev, libgtk2.0-dev,
+ libglc-dev (>= 0.7.1), libspeechd-dev, libgps-dev, freeglut3-dev,
+ libimlib2-dev, libdbus-1-dev, libxml2-dev, libfribidi-dev, libpq-dev,
+ libfreetype6-dev, libfontconfig1-dev, ttf-liberation,
+ libsdl-image1.2-dev, libdbus-glib-1-dev,
+ librsvg2-bin, libgarmin-dev, imagemagick
+Standards-Version: 3.9.2
+Homepage: http://navit.sourceforge.net/
+Vcs-Browser: http://git.debian.org/?p=collab-maint/navit.git;a=summary
+Vcs-Git: git://git.debian.org/git/collab-maint/navit.git
+
+Package: qtmoko-navit
+Architecture: any
+Depends: libc6 (>= 2.7), libdbus-1-3 (>= 1.0.2), libdbus-glib-1-2 (>= 0.78), libfontconfig1 (>= 2.8.0), libfreetype6 (>= 2.3.5), libfribidi0 (>= 0.19.2), libgarmin0 (>= 0~svn320), libgcc1 (>= 1:4.4.0), libglib2.0-0 (>= 2.24.0), libgps20 (>= 3.3), libpng12-0 (>= 1.2.13-4), libspeechd2, libssl1.0.0 (>= 1.0.0), zlib1g (>= 1:1.1.4)
+Recommends: gpsd
+Suggests: maptool
+Description: Car navigation system with routing engine
+ Navit is a car navigation system with routing engine.
+ .
+ Its modular design is capable of using vector maps of various formats for
+ routing and rendering of the displayed map. It's even possible to use multiple
+ maps at a time.
+ .
+ The GTK+ or SDL user interfaces are designed to work well with touch screen
+ displays. Points of Interest of various formats are displayed on the map.
+ .
+ The current vehicle position is either read from gpsd or directly from NMEA
+ GPS sensors.
+ .
+ The routing engine not only calculates an optimal route to your destination,
+ but also generates directions and even speaks to you using speech-dispatcher.
+ .
+ The Debian packaging for navit doesn't provide any map. To see, where you can
+ get maps from, see <http://wiki.navit-project.org/index.php/Main_Page#Maps>.

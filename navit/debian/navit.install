@@ -1,0 +1,11 @@
+debian/tmp/usr/lib/navit/map
+debian/tmp/usr/lib/navit/osd
+debian/tmp/usr/lib/navit/binding
+debian/tmp/usr/lib/navit/plugin
+debian/tmp/usr/lib/navit/speech
+debian/tmp/usr/lib/navit/vehicle
+debian/tmp/usr/lib/navit/font
+debian/tmp/usr/lib/navit/graphics/libgraphics_null*
+debian/tmp/usr/share/applications
+debian/tmp/usr/bin/navit
+debian/tmp/etc/navit

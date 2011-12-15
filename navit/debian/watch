@@ -1,0 +1,6 @@
+version=3
+
+# Navit is a young and volatile software which has not so often releases.
+# Until its development process stabilize, the packaging is done from upstream
+# SVN tree.
+# See debian/README.source for details.
