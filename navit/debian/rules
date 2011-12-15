@@ -16,6 +16,8 @@ binary: build
 	cp navit.png /opt/qtmoko/pics/navit
 	mkdir -p debian/tmp/opt/qtmoko
 	cp -r /opt/qtmoko/* debian/tmp/opt/qtmoko
+	mkdir -p debian/tmp/home/root/.navit
+	cp navit/navit.xml debian/tmp/home/root/.navit
 	install -d debian/tmp/DEBIAN
 	dpkg-gencontrol
 	dh_installdeb -P debian/tmp
