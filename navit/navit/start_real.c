@@ -142,12 +142,12 @@ int main_real(int argc, char **argv)
 			case ':':
 				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
 				print_usage();
-				exit(2);
+				/*exit(2);*/
 				break;
 			case '?':
 				fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
 				print_usage();
-				exit(3);
+				/*exit(3);*/
 #endif
 			}
 	  }
