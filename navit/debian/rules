@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+build:
+
+clean:
+	rm -rf debian/tmp
+	rm -f debian/files
+
+binary: build
+	./configure --prefix=/opt/qtmoko
+	make
+	make install
+	mkdir -p /opt/qtmoko/apps/Applications/
+	cp navit.desktop /opt/qtmoko/apps/Applications/
+	mkdir -p /opt/qtmoko/pics/navit
+	cp navit.png /opt/qtmoko/pics/navit
+	mkdir -p debian/tmp/opt/qtmoko
+	cp -r /opt/qtmoko/* debian/tmp/opt/qtmoko
+	install -d debian/tmp/DEBIAN
+	dpkg-gencontrol
+	dh_installdeb -P debian/tmp
+	chown -R root:root debian/tmp/opt
+	chmod -R u+w,go=rX debian/tmp/opt
+	dpkg --build debian/tmp ..

@@ -1,0 +1,812 @@
+qtmoko-navit (37-1) stable; urgency=low
+
+  * qtmoko port
+
+ -- Radek Polak <psonek2@seznam.cz>  Wed, 14 Dec 2011 22:49:00 +0400
+
+navit (0.5.0~svn4776+dfsg.1-3) unstable; urgency=low
+
+  * Fix cross-building navit-graphics-qt-qpainter:
+    + d/rules:
+      . Use cross g++ instead of the native one. 
+      . Set CXXFLAGS with target include paths
+      . Force include path /usr/$(DEB_HOST_MULTIARCH)/include/qt4
+      . define CMAKE_LIBRARY_PATH="/usr/$(DEB_HOST_GNU_TYPE)/lib"
+    + d/control:
+      . Build-Depends: libqtwebkit-dev
+  * cross-building for armel tested on i386 and amd64
+
+  * d/navit-data.menu: icon file specified with its full path
+    (Closes: #645954)
+
+ -- Gilles Filippini <pini@debian.org>  Sun, 30 Oct 2011 12:14:24 +0100
+
+navit (0.5.0~svn4776+dfsg.1-2) unstable; urgency=low
+
+  * Cross compilation support
+  * New patch:
+    + dpkg-cross.patch: when cross-building, force using the native compiler
+      to build the navit/map/garmin/gentypes build-time tool
+
+ -- Gilles Filippini <pini@debian.org>  Sun, 23 Oct 2011 18:52:32 +0200
+
+navit (0.5.0~svn4776+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + Configurable position extrapolation in tunnels
+    + Downloading of map data may be allowed or disallowed at runtime
+    + New command line parameters to specify a sequence of commands at startup
+    + New car profile to avoid toll roads
+    + gui_internal: POI Search by name
+    + Some new SVG icons from openclipart.org
+    + maptool:
+      - Huge restructuration
+      - Experimental o5m format support
+      - Make adding of unknown country towns an option to avoid bloated index
+      - Support for boundary relations
+      - Improved coast line handling
+      - Experimental support for adding county and municipality information
+    + Many other fixes and ehancements
+
+  * Removed patch:
+    + gui-gtk-quit.patch: fixed upstream
+  * New patches:
+    + valgrind-transform.patch: fix a read error reported by valgrind
+    + qt-cmake.patch: fixes cmake Qt4 detection (Closes: #634522)
+    + manpage-minus-signs.patch: escape minus signs in maptool's manpage
+  * Updated patch:
+    + fix-cmake.patch:
+      - force generating dbus config file org.navit_project.navit.service
+      - add CMakeLists.txt for navit/vehicle/null
+  * debian/rules:
+    + Force vehicle/null, vehicle/demo and vehicle/gpsd
+    + Don't overwrite flags set by dpkg-builflags (Closes: #634918)
+    + Minor cleanups and typos
+  * debian/control:
+    + Drop Build-Depends on libhildon-1-dev (not needed)
+    + navit-graphics-gtk-drawing-area: Depends librsvg2-common to have
+      the gdk-pixbuf for svg images
+  * debian/README.source:
+    + Updated removed parts list
+  * Add .gitignore and extend-diff-ignore for anjuta project files so
+    they're not included into the source package
+
+ -- Gilles Filippini <pini@debian.org>  Mon, 19 Sep 2011 08:29:27 +0200
+
+navit (0.5.0~svn4494+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + Minor fixes
+
+  * New patch lc_all.patch: when LC_ALL is set, unset it and set LANG
+    instead to prevent incorrect GPS position computations
+    (closes: #625949)
+  * New patch gui-gtk-quit.patch: preperly handle the quit command with
+    gui/gtk
+  * Reworked patch fix-cmake.patch: mostly applied upstream but a few
+    glitches remain to fix (closes: #626784)
+
+ -- Gilles Filippini <pini@debian.org>  Sun, 22 May 2011 10:49:03 +0200
+
+navit (0.5.0~svn4423+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + Improved cmake support
+    + New CSV map plugin to record POI and speed camera locations
+    + Support for speed camera from OSM data and CSV map files
+    + Support downloding maps from withing Navit (binfile format)
+    + Configurable key bindings for OSDs
+    + OSD odometer and stopwatch
+    + Protobuf database support for maptool
+    + Imperial units support
+    + Many other improvements and bug fixes
+
+  * debian/copyright:
+    + Update to DEP5 rev173
+    + Add new license paragraphs for:
+      - navit/browserplugin.c (MPL-1.1 or GPL-2+ or LGPL-2.1+)
+      - navit/maptool/google/protobuf-c/protobuf-c* (Apache-2.0)
+  * debian/control:
+    + Set Architecture to any for the navit binary package: navit is supposed
+      to support bigendian since 06/2009 (closes: #623238)
+    + Fix navit and navit-data descriptions to state that the
+      package doesn't provide any map (closes: #603378)
+    + Bump Standards-Version to 3.9.2 (no change needed)
+    + Drop Build-Depends on autotools in favor of cmake
+  * debian/rules:
+    + Now use the cmake build system
+  * New patches:
+    + fix-cmake.patch: various fixes and workarounds to build successfully
+      with cmake
+    + icons-dir: installs icons into /usr/share/navit/icons instead of
+      /usr/share/navit/xpm
+  * Remove patches not needed anymore with cmake:
+    + remove-espeak
+    + remove-ezxml
+    + remove-glib
+    + remove-libpng
+    + remove-mini-libc
+    + remove-support
+    + remove-ttf-liberation
+    + remove-win32
+    + remove-wordexp
+    + remove-zlib
+  * debian/rules, debian/control, debian/navit-gui-qml.install:
+    ground work to enable the QML plugin (not enabled in this build)
+
+  * Migrate to source format 3.0 (quilt)
+
+ -- Gilles Filippini <pini@debian.org>  Tue, 03 May 2011 00:14:36 +0200
+
+navit (0.2.0+dfsg.1-1) unstable; urgency=low
+
+  * New upstream Release (closes: #610531):
+    + Support for loading itineraries from destination.txt
+    + Support for writing destinations with multiple coordinates
+    + Initial support for waypoint routing
+    + Functional opengl and sdl graphic plugins (disabled for now)
+    + Initial support for the CMake build system (not used in this build)
+    + Better POI search
+    + New truck profile
+    + New Layout Car-simple
+    + Cyrillic support
+    + New translations: Australian English, Javanese, Basque, Tamil and Urdu
+    + Many bug fixes
+
+  * debian/rules: removed DEB_BUILD_OPTIONS handling as it is now handled
+    through dpkg-buildflags
+  * debian/control:
+    + dropped osm2navit dummy transitional package for squeeze+1
+
+ -- Gilles Filippini <pini@debian.org>  Fri, 28 Jan 2011 23:29:11 +0100
+
+navit (0.2.0~svn3501+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + Support for autoloaded plugins
+    + Many memory leaks fixed
+  * Refresh patches
+
+  * New patch path_max to try fixing the FTBFS on hurd-i386. 
+
+  * debian/control: bumped Standards-Version to 3.9.1 (no change needed)
+
+ -- Gilles Filippini <pini@debian.org>  Tue, 27 Jul 2010 22:36:40 +0200
+
+navit (0.2.0~svn3255+dfsg.1-3) unstable; urgency=low
+
+  * Fix yet another FTBFS occuring on some archs while moving navit.xml
+    to the target /etc/navit dir.
+
+ -- Gilles Filippini <pini@debian.org>  Tue, 18 May 2010 18:00:10 +0200
+
+navit (0.2.0~svn3255+dfsg.1-2) unstable; urgency=low
+
+  * Fix FTBFS when building only arch-dependent binary packages.
+
+ -- Gilles Filippini <pini@debian.org>  Mon, 17 May 2010 23:25:27 +0200
+
+navit (0.2.0~svn3255+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + New QML GUI (work in progress; currently disabled)
+    + Enhanced bookmark management
+    + Many bug fixes, including:
+      - force JSON gpsd responses (closes: #573855)
+  * Removed patches:
+    + fixed upstream:
+      - distclean_graphics_qt_qpainter
+      - pedestrian-without-android
+  * Refreshed patches:
+    + remove-win32 
+  * New patch:
+    + search_trick: when searching for a town, a '?' at the end of the
+      search string means "search exact matches only"
+
+  * debian/source/format: 1.0
+  * debian/rules: switched to the dh sequencer
+  * debian/control:
+    + Build-Depends: autopoint (Closes: #572476)
+    + Bumped the versioned Build-Depends on debhelper to (>= 7.0.50~)
+      as requested by using the dh sequencer
+    + Versioned Build-Depends on quilt (see #548094)
+
+ -- Gilles Filippini <pini@debian.org>  Sun, 16 May 2010 23:44:28 +0200
+
+navit (0.2.0~svn2974+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + new speech bus interface
+    + new vehicle maemo (support for Maemo/Fremantle liblocation API)
+    + new plugin for pedestrian navigation
+    + new about dialog
+    + new osd button for recording a description in a track point in the
+      GPX log file
+    + new command to say something (say)
+    + new command to set destination (set_destination)
+    + "Stop navigation" button now available during route calculation
+  * Removed patches:
+    + applied upstream:
+      - libgps-2.90-fix
+      - mg-unhandled-attr
+      - spelling
+    + fixed upstream:
+      - revert-part-of-svn2859
+      - no-default-poi-geodownload
+      - remove-libmdb.diff
+  * New patches:
+    + pedestrian-without-android: allow the plugin pedestrian to compile
+      without android support
+  * debian/control: bumped Standards-Version to 3.8.4 (no change needed)
+  * debian/copyright: bumped copyrights to 2010. 
+
+ -- Gilles Filippini <pini@debian.org>  Mon, 01 Mar 2010 22:08:24 +0100
+
+navit (0.2.0~svn2897+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + graphics_gd:
+      - support for resizing
+      - allow mouse move simulation
+    + massive translations update
+    + new osd scale for displaying map scale
+    + bug fixes (Closes: #562591)
+
+  * Updated patch libgps-2.90-fix to cope both with libgps18 and libgps19
+  * debian/control:
+    + drop the versionned Build-Depends to libgps-dev
+    + add ${misc:Depends} where missing
+  * debian/patches/mg-unhandled-attr: since more than one or two attributes
+    are missing, handle them the same way than in the garmin plugin: remove
+    the assert() and log a debug message
+  * new patch:
+    * spelling: fixes spelling errors reported by lintian
+
+ -- Gilles Filippini <pini@debian.org>  Mon, 11 Jan 2010 17:52:48 +0100
+
+navit (0.2.0~svn2865+dfsg.1-1) unstable; urgency=low
+
+  [ Gilles Filippini ]
+  * New upstream snapshot:
+    + Default GUI switched to gui_internal
+    + gui_internal:
+      - Configurable menus
+      - New "back" command
+      - Select bookmark by name
+      - Keyboard highlighting configurable
+      - Switch to numeric keyboard for house numbers
+      - Improved OSD keyboard
+    + binding/dbus: add GUI bindings
+    + New vehicle type gpsd_dbus
+    + Improved searching
+  * debian/control:
+    + Update Maintainer with my new address @debian.org
+    + Remove DM-Upload-Allowed (no more needed)
+  * Remove patch default_to_gui_internal (no more needed) 
+  * Update patches:
+    + remove-ttf-liberation 
+    + remove-support 
+  * New patches:
+    + mg-unhandled-attr: [MG] workaround unhandled attributes introduced
+      by svn2827 and svn2844.
+    + revert-part-of-svn2859: revert part of svn2859 which leads to a null
+      pointer error.
+
+  [ Bernd Zeimetz ]
+  * Add a patch to support the new libgps (>= 2.90)
+    - Also bump the build-dependency on libgps-dev for that.
+    - Closes: #560253
+
+ -- Gilles Filippini <pini@debian.org>  Fri, 18 Dec 2009 22:48:27 +0100
+
+navit (0.2.0~svn2755+dfsg.1-1) unstable; urgency=low
+
+  [ Gilles Filippini ]
+  * New upstream snapshot:
+    + Make osm2navit more modular and renamed to maptool
+    + Experimental support for Contraction Hierarchies routing
+    + New map type filter to filter other maps
+    + Map attributes are now setable
+    + New vehicle type: null
+    + Support for automatic day night switching
+    + gui_internal: new tool to show locale configuration
+    + Update python and dbus APIs
+    + navit.xml cleanup
+    + Translations update
+    + Bug fixes
+  * debian/control:
+    + Handle transition from osm2navit to maptool
+  * Rename and update debian/osm2navit.* to debian/maptool.*
+  * Remove patch mg-mmap (applied upstream)
+
+  [ Bernd Zeimetz ]
+  * Remove myself from uploaders. 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 16 Nov 2009 16:13:00 +0100
+
+navit (0.2.0~svn2663+dfsg.1-1) unstable; urgency=low
+
+  * New upstream snapshot:
+    + Vehicle profile switch
+    + Better handling of turn restrictions
+    + Big endian patch
+    + Accented characters on internal keyboard
+    + Updated translations
+    + Bug fixes
+  * Remove new android port from upstream source
+  * Remove new embedded libpng from upstream source
+  * Remove new embedded libespeak from upstream source
+  * Remove patches (applied upstream):
+    + moc_location
+    + endianness 
+  * New patches:
+    + remove-libpng: adapt to embedded libpng removal
+    + remove-espeak: adapt to embedded libespeak removal
+    + remove-support: no more need for a Makefile in navit/support
+    + mg-mmap: fix a significant memory link in mmap handling leading to a
+      segfault
+  * Update patches:
+    + default_to_gui_internal
+    + distclean_graphics_qt_qpainter
+    + remove-ezxml
+    + remove-glib
+    + remove-libmdb.diff
+    + remove-mini-libc
+    + remove-win32
+    + remove-wordexp
+    + remove-zlib
+  * debian/rules:
+    + Closes: 542284:
+      - Drop support for map/poi_geodownload: while this plugin could still be
+        used for MG POI files, there isn't any instruction about how to
+        configure it. BTW it has been reported to be quite slow.
+      - Drop support for binding/python: there isn't any piece of information
+        about the status / usage of this plugin.
+      - Remove unused .la files from plugins.
+  * debian/control:
+    + Standards-Version: bump to 3.8.3 (no change needed)
+    + Build-Depends:
+      - replace deprecated glutg3-dev with freeglut3-dev
+        (Closes: #543699).
+      - drop mdbtools-dev
+      - drop python-dev
+  * debian/README.source:
+    + Acknowledge android port and libpng removals from upstream source
+    + Remove versionning issue since it isn't needed anymore
+    + Remove endianness from TO-DOs 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 12 Oct 2009 23:00:14 +0200
+
+navit (0.1.1.0+dfsg.1-2) unstable; urgency=low
+
+  * debian/control: s/QT/Qt/g (Closes: 534783) 
+  * debian/patches/endianness: improve and test the patch on a Debian
+    sparc box with MG maps
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 28 Jun 2009 22:08:14 +0200
+
+navit (0.1.1.0+dfsg.1-1) unstable; urgency=low
+
+  [ Gilles Filippini ]
+  * New upstream release:
+    + Release 0.1.1 = upstream svn2349
+    + Routing optionally asynchronous
+    + Housenumber search
+    + Experimental support for turn restrictions
+    + Experimental support for traffic distortions
+    + Support for map editing
+    + Bug fixes
+  * Remove patches (applied upstream):
+    + gui_internal_no_gtk2
+  * Activate libgarmin support 
+  * debian/copyright:
+    + Add missing copyright statement for files navit/map/garmin/*
+  * New patch:
+    + default_to_gui_internal: configure gui-internal as the default in
+      navit.xml 
+  * debian/README.source: refresh 
+  * Change versionning from 0.1.1.~svn to 0.1.1.0~svn to ease tagging via
+    git-buildpackage 
+  * Add a generated 32x32 xpm icon for Debian menu (Closes: #532374)
+  * debian/control:
+    + Build-Depends on imagemagick to generate the aforementionned xpm icon
+    + Navit target architecture limited to little-endians since mg plugin
+      isn't big-endian compatible yet
+    + Bump Standards-Version to 3.8.2 (no change needed)
+  * debian/navit-data.menu:
+    + Move navit Debian menu into the navit-data package
+    + Quote the icon field
+  * Upload to unstable
+
+  [ Bernd Zeimetz ]
+  * Set DM-Upload-Allowed: yes for Gilles Filippini.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Tue, 23 Jun 2009 13:30:05 +0200
+
+navit (0.1.1.~svn2246-1) experimental; urgency=low
+
+  [ Gilles Filippini ]
+  * New upstream snapshot: 
+    + Add horse and pedestrian vehicle profiles
+    + Enhance routing
+    + Remove deprecated graphics: cogl
+    + Fix typo in configure.in (Closes: #521815)
+    + Fix many compilation warnings
+  * debian/rules:
+    + Enable python binding
+    + --enable-avoid-float [armel] (Closes: #521809)
+    + Replace deprecated --disable-gypsy with --disable-vehicle-gypsy
+      (Closes: #521812)
+    + Force using rsvg-convert for svg2png conversions
+    + Remove unneeded ltmain.sh copy statement
+    + Remove no more needed navit/graphics/cogl cleansing
+  * debian/control:
+    + Build-Depends:
+      - python-dev 
+      - remove inkscape | kdebase-runtime | kdelibs4-dev to leave
+        librsvg2-bin only
+  * Refresh patches: mg-alignment, remove-* 
+  * Remove patches (applied upstream):
+    + clean_pngs
+    + mg-alignment
+  * New patches:
+    + endianness: to support big-endian architectures. 
+    + moc_location: force qt4 moc use when qt3 moc is in the way (thanks bzed).
+    + distclean_graphics_qt_qpainter: handle graphics_qt_qpainter.moc removal
+      during distclean.
+    + gui_internal_no_gtk2: remove gtk2 dependency to gui_internal.
+
+  [ Bernd Zeimetz ]
+  * debian/copyright:
+     -Adding missing copyright informations for files in navit/map/shapefile.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 03 May 2009 10:30:39 +0200
+
+navit (0.1.1.~svn2111-1) experimental; urgency=low
+
+  * New upstream snapshot:
+    + Remove deprecated guis: clutter, cegui, directfb.
+    + Remove deprecated graphics: directfb.
+  * Removed patch:
+    + remove-ttf-dejavu (deprecated).
+  * debian/rules: remove deprecated configure flags.
+  * debian/README.source: remove deprecated notes.
+  * debian/control: bumped policy to 3.8.1 (no change needed). 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Thu, 12 Mar 2009 23:04:19 +0100
+
+navit (0.1.1.~svn2086-1) experimental; urgency=low
+
+  * New upstream snapshot.
+  * Refresh patches.
+  * debian/copyright: remove copyrigths about removed files.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 08 Mar 2009 22:37:45 +0100
+
+navit (0.1.1.~svn2077-1) experimental; urgency=low
+
+  [ Gilles Filippini ]
+  * New upstream snapshot, first upload to Debian (Closes: #451561).
+  * debian/control:
+    + Prevent recursive dependency. Plugin packages should recommend navit
+      instead of depend. 
+    + Solved lintian error not-binnmuable-any-depends-any
+  * Removed patch hyphen-used-as-minus-sign (applied upstream)
+  * debian/changelog: targeting experimental
+
+  [ Bernd Zeimetz ]
+  * debian/rules:
+    - Remove .deps and .libs directories in clean target.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Wed, 04 Mar 2009 13:33:58 +0100
+
+navit (0.1.1.~svn2076-3) unstable; urgency=low
+
+  * Renamed graphics plugin packages: graphic -> graphics. 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 02 Mar 2009 21:13:18 +0100
+
+navit (0.1.1.~svn2076-2) unstable; urgency=low
+
+  * Dropped graphic plugins gd and sdl: they are currently broken at run-time. 
+  * One binary package per gui and grphic plugin.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 02 Mar 2009 14:30:06 +0100
+
+navit (0.1.1.~svn2076-1) unstable; urgency=low
+
+  * New upstream snapshot
+  * Reverted mg-alignment patch to the very strict minimum (tested on armel
+    with "echo 4 > proc/cpu/alignment").
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 01 Mar 2009 23:05:42 +0100
+
+navit (0.1.1.~svn2067-2) unstable; urgency=low
+
+  * New patch:
+    + mg-alignment: alignement fix for the MG plugin.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Tue, 24 Feb 2009 00:43:20 +0100
+
+navit (0.1.1.~svn2067-1) unstable; urgency=low
+
+  * New upstream snapshot
+  * Lintian clean:
+    + debian/watch (new)
+    + debian/patches/*: added a comment header
+    + debian/control:
+      - Build-Depends: debhelper (>= 0.7)
+    + new patch hyphen-used-as-minus-sign to escape minus signs in
+      man/osm2navit.1
+    + debian/navit.docs: removed ChangeLog (not a real one)
+  * debian/README.source: updated
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 23 Feb 2009 15:12:10 +0100
+
+navit (0.1.1.~svn2062-2) unstable; urgency=low
+
+  * Removed navit init.d script which issued 'echo 2 > /proc/cpu/alignment'
+    at boot time on ARM processors: the code with broken alignment has to be
+    fixed.
+  * Moved osm2navit to its own binary package.
+  * Reworked debian/ files to let dh do its work when possible.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 23 Feb 2009 01:18:27 +0100
+
+navit (0.1.1.~svn2062-1) unstable; urgency=low
+
+  [ Gilles Filippini ]
+  * Removed from upstream tree (not used):
+    + navit/graphics/win32/*
+    + navit/gui/cegui/datafiles/fonts/*
+    + navit/gui/win32/*
+    + navit/script/*
+    + navit/support/*
+    + navit/tools/*
+  * New patches:
+    + remove-ezxml
+    + remove-zlib
+    + remove-win32
+    + remove-wordexp
+    + remove-ttf-dejavu
+  * debian/copyright:
+    + Acknowledge bzed copyright for 2009
+  * debian/README.source
+    + Updated TO-DO and ISSUES accordingly
+    + Acknowledged navit trac ticket #303
+  * debian/rules:
+    + Backported part of my cdbs debian/rules file
+    + The menu file is handled by debhelper
+    + Fixed debian/rules to prevent ./configure running twice
+
+  [ Bernd Zeimetz ]
+  * New upstream snapshot
+  * removing non-existing files from debian/copyright
+  * Spliting -data package from the single one.
+  * Dropping CDBS in favor of a useful rules file. Switching back to my
+    original rules file, also including some (yet untested) lines to
+    move arch-indep. content into navit-data.
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 22 Feb 2009 15:34:42 +0100
+
+navit (0.1.1.~svn2051-4) unstable; urgency=low
+
+  * Removed glib from upstream (not needed).
+  * Removed mini libc from upstream (no copyright statement; not used).
+  * Enabled qt painter support
+  * Enabled libgd support
+  * Enabled postgresql support for osm2navit
+  * debian/README.source:
+    + ezxml license (MIT)
+    + glib removal
+    + mini libc removal
+    + updated TO-DOs
+  * debian/control:
+    + Depends: added libdbus-glib-1-dev, libgd2-xpm-dev, libqt4-dev, libpq-dev
+  * debian/rules:
+    + configure: --enable-graphics-gd --disable-binding-python (broken)
+  * New Patches:
+    + remove-glib
+    + remove-mini-libc
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sat, 21 Feb 2009 22:31:33 +0100
+
+navit (0.1.1.~svn2051-3) unstable; urgency=low
+
+  * Removed navit/fonts from upstream branch since ttf-liberation is in
+    Debian.
+  * debian/control:
+    + Build-Depends:
+      - added cvs, automake, mdbtools-dev, libfreetype6-dev,
+        libfontconfig1-dev, ttf-liberation, libhildon-1-dev
+      - removed libgarmin-dev, libcegui-mk2-dev
+  * debian/README.source:
+    + Updated TO-DOs
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Fri, 20 Feb 2009 21:26:56 +0100
+
+navit (0.1.1.~svn2051-2) unstable; urgency=low
+
+  * debian/README.source:
+    + added a section do deal with svn/git handling of the source package.
+    + pasted the quilt README.source to explain how to modify the upstream
+      source code
+    + (required by policy 3.8.0, §4.14). 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Wed, 18 Feb 2009 21:23:53 +0100
+
+navit (0.1.1.~svn2051-1) unstable; urgency=low
+
+  * New upstream snapshot.
+
+  * Moved the packaging on alioth and merged there with bzed's package:
+    + debian/copyright: added bzed
+    + debian/control:
+      - Section: moved to misc
+      - Depends:
+        . Removed librsvg2-common (unused)
+        . Moved gpsd to Recommends:
+      - Description:
+        . Merged short description with bzed's
+        . Typo: It's -> Its
+      - Added git related stanzas
+    + debian/rules:
+      - Merged configure flags with bzed's
+      - Removed get-orig-source (not needed anymore)
+      - Updated to run autogen.sh
+    + patches:
+      - Added remove-libmdb.diff from bzed
+      - Removed clean_pngs.autoreconf: not used anymore
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Tue, 17 Feb 2009 23:44:23 +0100
+
+navit (0.1.1.~svn2032-1) unstable; urgency=low
+
+  * New upstream release.
+
+  * debian/rules:
+    + Switched to CDBS
+  * debian/copyright:
+    + Reworked to conform to revision 437 of CopyrightFormat proposal
+      available at http://wiki.debian.org/Proposals/CopyrightFormat
+  * debian/README.source:
+    + New file to keep track of packaging related issues 
+  * debian/control:
+    + Set myself as the maintainer
+    + Bumped standard version to 3.8.0
+    + Depends:
+      - Added cdbs, quilt, libsdl-image1.2-dev
+      - Replaced kdelibs4-dev with (librsvg2-bin|inkscape|kdebase-runtime|
+        kdelibs4-dev) to provides at least one of the svg to png converter
+        looked for by ./configure.in
+  * debian/changelog:
+    + Temporary change of the versioning scheme since I started erromeously
+      with 0.1.1+svnNNNN instead of 0.1.1~svnNNNN. I've added an extra dot
+      (0.1.1.~svnNNNN) until 0.1.1 is released.
+  * debian/navit.pl: removed since unused
+  * debian/navit.init:
+    + issues 'echo 2 > /proc/cpu/alignment' at boot time
+  * Patches:
+    + clean_pngs: remove generated png files during distclean-local so that
+      the package can afford two builds in a row.
+    + clean_pngs.autoreconf: modified Makefile.in from clean_pngs patch
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Fri, 13 Feb 2009 01:50:54 +0100
+
+navit (0.1.1+svn2023-1) unstable; urgency=low
+
+  * New upstream snapshot
+  * debian/control: Depends: added libtool
+  * debian/rules:
+    + copy ltmain.sh from libtool
+    * tweak the targets so that several builds in a row succeed 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sat, 07 Feb 2009 12:07:03 +0100
+
+navit (0.1.1+svn1966-1) unstable; urgency=low
+
+  * New upstream snapshot 
+  * debian/rules: CFLAGS: removed -g 
+  * debian/control: Depends: added autotools-dev, cvs
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sat, 24 Jan 2009 14:51:21 +0100
+
+navit (0.1.1+svn1873-1) unstable; urgency=low
+
+  * New upstream snapshot 
+  * debian/rules:
+    + Added configure option --enable-svg2png-scaling-flag="8 16 32 48 96" to
+      enable country flag icons.
+  * debian/control:
+    + Build-Depends: kdelibs4-dev to enable country flag SVGs conversion to
+      PNG files. 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Tue, 30 Dec 2008 00:00:07 +0100
+
+navit (0.1.1+svn1865-1) unstable; urgency=low
+
+  * New upstream snapshot 
+  * Rearranged source package to match the standard with a orig.tar.gz
+    pristine source tree and a diff.gz debian patch. 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 29 Dec 2008 11:12:02 +0100
+
+navit (0.1.1+svn1863-1) unstable; urgency=low
+
+  * New upstream snapshot 
+  * debian/control:
+    + Depends: librsvg2-common 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 28 Dec 2008 21:52:39 +0100
+
+navit (0.1.0+svn1857-1) unstable; urgency=low
+
+  * New upstream snapshot 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 28 Dec 2008 11:42:04 +0100
+
+navit (0.1.0+svn1843-1) unstable; urgency=low
+
+  * New upstream snapshot
+  * Removed the navit.pl wrapper script which is too specific for openmoko.
+  * debian/control:
+    + removed gdsd version reference to enable fso-gpsd 
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Tue, 23 Dec 2008 00:52:01 +0100
+
+navit (0.0.4+svn1229-3) unstable; urgency=low
+
+  * fixed a small bug in navit.pl: delete LC_ALL from the environment, instead
+    of only undefining it.
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Sat, 25 Oct 2008 21:07:46 +0200
+
+navit (0.0.4+svn1229-2) unstable; urgency=low
+
+  * Added new startup script. This script will:
+    - check, if gpsd is running and try to start it
+    - if it fails, it will run dpkg-reconfigure gpsd
+    - check, if a navit.xml exists in the user's home
+    - if not, create one and download an osm map, the user selects from a list
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Thu,  6 Sep 2008 18:30:23 +0200
+
+navit (0.0.4+svn1229-1) unstable; urgency=low
+
+  * New upstream snapshot
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Thu, 24 Jul 2008 00:25:53 +0200
+
+navit (0.0.4+svn1205-1) unstable; urgency=low
+
+  * New upstream snapshot
+  * enabled garmin map support
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Sat, 12 Jul 2008 17:43:36 +0200
+
+navit (0.0.4+cvs20080525-2) unstable; urgency=low
+
+  * put a wrapper in place of the navit binary to take care of setting the
+    right environment for navit
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Mon, 26 May 2008 19:02:13 +0200
+
+navit (0.0.4+cvs20080525-1) unstable; urgency=low
+
+  * New cvs version
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Mon, 26 May 2008 14:58:50 +0200
+
+navit (0.0.4+cvs20080419-1) unstable; urgency=low
+
+  * todays CVS version
+  * added some dependencies
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Sat, 19 Apr 2008 18:37:24 +0200
+
+navit (0.0.4+cvs20080418-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Fri, 18 Apr 2008 23:28:24 +0200
+

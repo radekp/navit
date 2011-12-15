@@ -1,0 +1,14 @@
+navit for Debian
+----------------
+
+Navit is a young and volatile software. Often after an update you will have
+to redo your configuration starting with copying /etc/navit/navit.xml
+to ~/.navit/ and then editing it. Pease have a look at the Configuring Navit
+wiki page at:
+http://wiki.navit-project.org/index.php/Configuring_Navit
+
+Before you can make use of this software, you need to get maps. To see, where
+you can get maps for navit, see:
+http://wiki.navit-project.org/index.php/Main_Page#Maps
+
+ -- Carsten Wolff <carsten@yet-another-geek.org>  Fri, 18 Apr 2008 23:28:24 +0200
