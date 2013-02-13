@@ -17,6 +17,8 @@ binary: build
 	make install
 	mkdir -p /opt/qtmoko/apps/Applications/
 	cp navit.desktop /opt/qtmoko/apps/Applications/
+	mkdir -p /opt/qtmoko/bin
+	cp navit.sh /opt/qtmoko/bin
 	mkdir -p /opt/qtmoko/pics/navit
 	cp navit.png /opt/qtmoko/pics/navit
 	mkdir -p debian/tmp/opt/qtmoko

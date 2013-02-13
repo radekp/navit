@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Navit
 Comment=Car navigation program
-Exec=navit
+Exec=navit.sh
 Icon=navit/navit
 Type=Application
