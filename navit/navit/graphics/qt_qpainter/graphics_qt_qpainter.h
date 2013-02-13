@@ -67,6 +67,8 @@
 #include <QResizeEvent>
 #include <QApplication>
 #include <QtopiaApplication>
+#include <QWhereabouts>
+#include <QWhereaboutsFactory>
 #if QT_VERSION >= 0x040200
 #include <QGraphicsScene>
 #include <QGraphicsView>

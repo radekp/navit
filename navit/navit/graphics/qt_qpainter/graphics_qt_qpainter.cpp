@@ -971,6 +971,8 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->app = new QPEApplication(argc, argv);
 #else
 	ret->app = new QtopiaApplication(argc, argv);
+        QWhereabouts *whereabouts = QWhereaboutsFactory::create();
+        whereabouts->startUpdates();
 #endif
 #endif
 	ret->widget= new RenderArea(ret);
