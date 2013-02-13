@@ -130,6 +130,7 @@ struct graphics_priv {
 	QPEApplication *app;
 #else
 	QtopiaApplication *app;
+    QWhereabouts *whereabouts;
 #endif
 	RenderArea *widget;
 	QPainter *painter;

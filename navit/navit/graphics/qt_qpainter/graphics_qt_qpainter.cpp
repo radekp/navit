@@ -822,11 +822,15 @@ static struct graphics_priv *event_gr;
 static void
 event_qt_main_loop_run(void)
 {
+    QtopiaApplication::setPowerConstraint(QtopiaApplication::DisableSuspend);
+    event_gr->whereabouts->startUpdates();
 	event_gr->app->exec();
 }
 
 static void event_qt_main_loop_quit(void)
 {
+    QtopiaApplication::setPowerConstraint(QtopiaApplication::Enable);
+    event_gr->whereabouts->stopUpdates();
 	dbg(0,"enter\n");
 	exit(0);
 }
@@ -971,8 +975,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->app = new QPEApplication(argc, argv);
 #else
 	ret->app = new QtopiaApplication(argc, argv);
-        QWhereabouts *whereabouts = QWhereaboutsFactory::create();
-        whereabouts->startUpdates();
+    ret->whereabouts = QWhereaboutsFactory::create();
 #endif
 #endif
 	ret->widget= new RenderArea(ret);
