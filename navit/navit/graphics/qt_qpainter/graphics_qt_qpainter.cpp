@@ -831,6 +831,7 @@ static void event_qt_main_loop_quit(void)
 {
     QtopiaApplication::setPowerConstraint(QtopiaApplication::Enable);
     event_gr->whereabouts->stopUpdates();
+    delete(event_gr->whereabouts);
 	dbg(0,"enter\n");
 	exit(0);
 }
