@@ -2,7 +2,7 @@
 
 export PKG_CONFIG_PATH=/root/qte/qtmoko/dist/pkgconfig-qtmoko/
 export PATH=/usr/lib/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/qte/build/sdk/qtopiacore/host/bin
-export QT_GUI_CFLAGS=-fno-rtti
+export QT_GUI_CFLAGS="-DQT_QPAINTER_USE_EVENT_GLIB=1 -DQT_QPAINTER_USE_EVENT_QT=0"
 
 build:
 
