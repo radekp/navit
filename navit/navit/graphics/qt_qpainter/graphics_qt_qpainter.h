@@ -105,8 +105,6 @@
 #define QT_QPAINTER_RENDERAREA_PARENT QMainWindow
 #endif
 
-#define QT_QPAINTER_USE_EVENT_QT 1
-
 class RenderArea;
 
 //##############################################################################################################
@@ -130,7 +128,7 @@ struct graphics_priv {
 	QPEApplication *app;
 #else
 	QtopiaApplication *app;
-    QWhereabouts *whereabouts;
+	QWhereabouts *whereabouts;
 #endif
 	RenderArea *widget;
 	QPainter *painter;

@@ -154,6 +154,27 @@ struct graphics_image_priv {
 //##############################################################################################################
 static void graphics_destroy(struct graphics_priv *gr)
 {
+	if(gr->painter->isActive())
+	{
+		dbg(1,"destroy called for active painter\n");
+		gr->painter->end();
+	}
+#ifndef QT_QPAINTER_NO_APP
+#ifndef HAVE_QPE
+	if(gr->app != NULL)
+	{
+		dbg(1, "allow suspend\n");
+		gr->app->setPowerConstraint(QtopiaApplication::Enable);
+	}
+	if(gr->whereabouts != NULL)
+	{
+		dbg(1,"QWhereabouts destroyed\n");
+		gr->whereabouts->stopUpdates();
+		delete(gr->whereabouts);
+		gr->whereabouts = NULL;
+	}
+#endif
+#endif
 	g_free(gr->window_title);
 	g_free(gr);
 }
@@ -555,7 +576,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	dbg(1,"mode for %p %d\n", gr, mode);
 	QRect r;
-	if (mode == draw_mode_begin) {
+	if (mode == draw_mode_begin || mode == draw_mode_begin_clear) {
 #if QT_VERSION >= 0x040000
 		if (gr->widget->pixmap->paintingActive()) {
 			gr->widget->pixmap->paintEngine()->painter()->end();
@@ -575,7 +596,10 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #if 0
 		if (gr->mode == draw_mode_begin) {
 #endif
-			gr->painter->end();
+			if(!gr->painter->isActive())
+			{
+				gr->painter->end();
+			}
 			if (gr->parent) {
 				if (gr->cleanup) {
 					overlay_rect(gr->parent, gr, 1, &r);
@@ -638,12 +662,26 @@ fullscreen(struct window *win, int on)
 }
 
 static void
-disable_suspend(struct window *win)
+disable_suspend(struct graphics_priv  *priv)
 {
+#ifndef QT_QPAINTER_NO_APP
 #ifdef HAVE_QPE
-	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
-	this_->app->setTempScreenSaverMode(QPEApplication::DisableLightOff);
+	priv->app->setTempScreenSaverMode(QPEApplication::DisableLightOff);
 #endif
+#ifndef HAVE_QPE
+	dbg(0, "disable_suspend\n");
+        priv->app->setPowerConstraint(QtopiaApplication::DisableLightOff);
+#endif
+#endif
+
+}
+
+static void
+qt_qpainter_disable_suspend(struct window *win)
+{
+	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
+	dbg(0, "qt_qpainter_disable_suspend called from navit");
+	disable_suspend(this_);
 }
 
 //##############################################################################################################
@@ -655,10 +693,9 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 {
 	struct window *win;
 	QString xid;
-	bool ok;
 
 	if (!strcmp(type, "resize")) {
-		dbg(0,"resize %d %d\n",this_->w,this_->h);
+		dbg(1,"resize %d %d\n",this_->w,this_->h);
 		QSize size(this_->w,this_->h);
 		this_->widget->do_resize(size);
 	}
@@ -673,6 +710,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 		EmbeddedWidget* _outerWidget=new EmbeddedWidget(this_,this_->widget,NULL);
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
+			bool ok;
 			_outerWidget->embedInto(xid.toULong(&ok,0));
 		}
 		_outerWidget->showMaximized();
@@ -684,7 +722,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 #endif /* QT_QPAINTER_NO_WIDGET */
 		win->priv=this_;
 		win->fullscreen=fullscreen;
-		win->disable_suspend=disable_suspend;
+		win->disable_suspend=qt_qpainter_disable_suspend;
 		return win;
 	}
 	return NULL;
@@ -818,21 +856,19 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 
 
 static struct graphics_priv *event_gr;
+ 
 
 static void
 event_qt_main_loop_run(void)
 {
-    QtopiaApplication::setPowerConstraint(QtopiaApplication::DisableSuspend);
-    event_gr->whereabouts->startUpdates();
+	dbg(1,"enter\n");
 	event_gr->app->exec();
 }
 
 static void event_qt_main_loop_quit(void)
 {
-    QtopiaApplication::setPowerConstraint(QtopiaApplication::Enable);
-    event_gr->whereabouts->stopUpdates();
-    delete(event_gr->whereabouts);
-	dbg(0,"enter\n");
+	/*Warning: event_gr already freed here!*/
+	dbg(1,"enter\n");
 	exit(0);
 }
 
@@ -879,21 +915,21 @@ event_qt_remove_timeout(struct event_timeout *ev)
 static struct event_idle *
 event_qt_add_idle(int priority, struct callback *cb)
 {
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	return (struct event_idle *)event_qt_add_timeout(0, 1, cb);
 }
 
 static void
 event_qt_remove_idle(struct event_idle *ev)
 {
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	event_qt_remove_timeout((struct event_timeout *) ev);
 }
 
 static void
 event_qt_call_callback(struct callback_list *cb)
 {
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 }
 
 static struct event_methods event_qt_methods = {
@@ -914,7 +950,7 @@ struct event_priv {
 struct event_priv *
 event_qt_new(struct event_methods *meth)
 {
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	*meth=event_qt_methods;
 	return NULL;
 }
@@ -931,7 +967,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct attr *attr;
 
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 #if QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
@@ -976,8 +1012,14 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->app = new QPEApplication(argc, argv);
 #else
 	ret->app = new QtopiaApplication(argc, argv);
-    ret->whereabouts = QWhereaboutsFactory::create();
+	ret->whereabouts = QWhereaboutsFactory::create();
+	if(ret->whereabouts != NULL)
+	{
+		dbg(1,"QWhereabouts created\n");
+		ret->whereabouts->requestUpdate();
+	}
 #endif
+	disable_suspend(ret);
 #endif
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
@@ -995,8 +1037,6 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		ret->window_title=g_strdup(attr->u.str);
 	else
 		ret->window_title=g_strdup("Navit");
-
-	dbg(0,"return\n");
 	return ret;
 }
 

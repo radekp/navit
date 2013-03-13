@@ -157,8 +157,8 @@ void RenderArea::do_resize(QSize size)
     QPainter painter(pixmap);
     QBrush brush;
 	painter.fillRect(0, 0, size.width(), size.height(), brush);
-	dbg(0,"size %dx%d\n", size.width(), size.height());
-	dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
+	dbg(1,"size %dx%d\n", size.width(), size.height());
+	dbg(1,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
 	callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
 }
 
@@ -332,7 +332,7 @@ void RenderArea::watchEvent(int fd)
 #endif
 }
 
-#ifdef QT_QPAINTER_USE_EVENT_QT
+#if QT_QPAINTER_USE_EVENT_QT
 void RenderArea::timerEvent(QTimerEvent *event)
 {
 	int id=event->timerId();
