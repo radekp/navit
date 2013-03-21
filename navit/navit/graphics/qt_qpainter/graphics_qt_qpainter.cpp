@@ -968,13 +968,13 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct attr *attr;
 
 	dbg(1,"enter\n");
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
 	if (! event_request_system("qt","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
-#if QT_QPAINTER_USE_EVENT_GLIB
+#ifdef QT_QPAINTER_USE_EVENT_GLIB
 	if (! event_request_system("glib","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
@@ -1024,7 +1024,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
 	ret->painter = new QPainter;
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	event_gr=ret;
 #endif
 	ret->w=800;
@@ -1049,7 +1049,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 void plugin_init(void)
 {
         plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
         plugin_register_event_type("qt", event_qt_new);
 #endif
 }
